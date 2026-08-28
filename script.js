@@ -205,87 +205,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Project Detail Modal
-const editModal = document.getElementById('editModal');
-const editForm = document.getElementById('editForm');
-const closeModal = document.querySelector('.close');
-const editProjectId = document.getElementById('editProjectId');
-const editProjectName = document.getElementById('editProjectName');
-const editProjectType = document.getElementById('editProjectType');
-const editProjectDescription = document.getElementById('editProjectDescription');
-const editProjectSource = document.getElementById('editProjectSource');
-const editProjectComparison = document.getElementById('editProjectComparison');
-
-function openProjectDetail(projectId) {
-    const project = projects.find(p => p.id === projectId);
-    if (!project) return;
-
-    // Check password for detailed editing
-    const password = prompt('请输入查看项目详情密码：');
-    if (password === 'zhangyiduo999') {
-        editProjectId.value = project.id;
-        editProjectName.value = project.name;
-        editProjectType.value = project.type;
-        editProjectDescription.value = project.description;
-        editProjectSource.value = project.source;
-        editProjectComparison.value = project.comparison;
-        editModal.style.display = 'block';
-    } else if (password !== null) {
-        alert('密码错误！');
-    }
-}
-
-closeModal.addEventListener('click', () => {
-    editModal.style.display = 'none';
-});
-
-window.addEventListener('click', (e) => {
-    if (e.target === editModal) {
-        editModal.style.display = 'none';
-    }
-});
-
-editForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const projectId = parseInt(editProjectId.value);
-    const project = projects.find(p => p.id === projectId);
-
-    if (project) {
-        project.name = editProjectName.value;
-        project.type = editProjectType.value;
-        project.description = editProjectDescription.value;
-        project.source = editProjectSource.value;
-        project.comparison = editProjectComparison.value;
-
-        // Update the display
-        updateProjectDisplay(projectId);
-        editModal.style.display = 'none';
-
-        showToast('项目信息已更新！');
-    }
-});
-
-function updateProjectDisplay(projectId) {
-    // This would update the project display in real-time
-    // For now, we'll just show a success message
-    showToast('项目信息已更新！');
-}
-
-// Toast Notification
-function showToast(message) {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = message;
-    document.body.appendChild(toast);
-
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => {
-            document.body.removeChild(toast);
-        }, 300);
-    }, 3000);
-}
 
 // Video Playback Control
 let currentPlayingVideo = null;
@@ -324,31 +243,6 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Contact Form
-const contactForm = document.getElementById('contactForm');
-contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    // Simple form validation
-    const inputs = contactForm.querySelectorAll('input, textarea');
-    let isValid = true;
-
-    inputs.forEach(input => {
-        if (input.hasAttribute('required') && !input.value.trim()) {
-            isValid = false;
-            input.style.borderColor = '#ff4444';
-        } else {
-            input.style.borderColor = '#333';
-        }
-    });
-
-    if (isValid) {
-        showToast('消息已发送！我会尽快回复您。');
-        contactForm.reset();
-    } else {
-        showToast('请填写所有必填字段！');
-    }
-});
 
 // Add smooth reveal animation on scroll
 const observerOptions = {
