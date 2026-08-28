@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>zhangyiduo-editor - 视频剪辑师作品集</title>
+    <meta name="description" content="专业视频剪辑师作品集，展示精选剪辑项目">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">zhangyiduo</div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#hero" class="nav-link">首页</a></li>
+                <li><a href="#projects" class="nav-link">精选项目</a></li>
+                <li><a href="#about" class="nav-link">关于我</a></li>
+                <li><a href="#skills" class="nav-link">专业技能</a></li>
+                <li><a href="#contact" class="nav-link">联系方式</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">张一多</h1>
+            <p class="hero-subtitle">专业视频剪辑师 | 视觉叙事创作者</p>
+            <p class="hero-specialty">擅长：电影感剪辑 | 品牌视频 | 短视频创意</p>
+        </div>
+        <div class="hero-video-container">
+            <video id="heroVideo" class="hero-video" muted playsinline loop>
+                <source src="videos/showreel.mp4" type="video/mp4">
+                您的浏览器不支持视频播放
+            </video>
+            <div class="video-controls">
+                <button id="playPauseBtn" class="control-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                </button>
+                <button id="soundBtn" class="control-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                    </svg>
+                </button>
+                <button id="fullscreenBtn" class="control-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Projects Section -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title">精选项目</h2>
+            <div class="projects-grid" id="projectsGrid">
+                <!-- Projects will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">关于我</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>我是张一多，一名专注于视觉叙事的视频剪辑师。我相信好的剪辑不仅仅是技术的展现，更是情感和故事的传递。</p>
+                    <p>从业5年来，我参与过上百个项目的剪辑工作，从品牌广告到独立电影，从短视频长片到纪录片。我的作品始终保持着对细节的执着和对创新的追求。</p>
+                    <p style="margin-top: 20px;"><strong>编辑密码：</strong>zhangyiduo999</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills">
+        <div class="container">
+            <h2 class="section-title">专业技能与使用软件</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>剪辑软件</h3>
+                    <ul>
+                        <li>Adobe Premiere Pro</li>
+                        <li>Final Cut Pro X</li>
+                        <li>DaVinci Resolve</li>
+                        <li>Adobe After Effects</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>特效包装</h3>
+                    <ul>
+                        <li>Adobe After Effects</li>
+                        <li>Cinema 4D</li>
+                        <li>Mocha Pro</li>
+                        <li>Red Giant Suite</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>调色工具</h3>
+                    <ul>
+                        <li>DaVinci Resolve</li>
+                        <li>Adobe SpeedGrade</li>
+                        <li>ColorFinale</li>
+                        <li>Looks</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>音频处理</h3>
+                    <ul>
+                        <li>Adobe Audition</li>
+                        <li>Pro Tools</li>
+                        <li>Logic Pro X</li>
+                        <li>Fairlight</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">联系方式</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                        <a href="mailto:zhangyiduo@example.com">zhangyiduo@example.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                        </svg>
+                        <span>138-0000-0000</span>
+                    </div>
+                    <div class="contact-item">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                        </svg>
+                        <span>微信：zhangyiduo_editor</span>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <h3>留言咨询</h3>
+                    <form id="contactForm">
+                        <input type="text" placeholder="您的姓名" required>
+                        <input type="email" placeholder="您的邮箱" required>
+                        <textarea placeholder="项目需求描述" rows="4" required></textarea>
+                        <button type="submit">发送消息</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 zhangyiduo-editor. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>编辑项目信息</h2>
+            <form id="editForm">
+                <input type="hidden" id="editProjectId">
+                <div class="form-group">
+                    <label for="editProjectName">项目名称</label>
+                    <input type="text" id="editProjectName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProjectType">项目类型</label>
+                    <input type="text" id="editProjectType" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProjectDescription">项目简介</label>
+                    <textarea id="editProjectDescription" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editProjectSource">素材来源</label>
+                    <input type="text" id="editProjectSource">
+                </div>
+                <div class="form-group">
+                    <label for="editProjectComparison">剪辑对比说明</label>
+                    <textarea id="editProjectComparison" rows="4" placeholder="描述原始素材与剪辑后的变化..."></textarea>
+                </div>
+                <button type="submit">保存修改</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
