@@ -94,7 +94,7 @@ const playPauseBtn = document.getElementById('playPauseBtn');
 const soundBtn = document.getElementById('soundBtn');
 const fullscreenBtn = document.getElementById('fullscreenBtn');
 
-// Load hero video from Releases (same as project 1)
+// Set hero video source
 heroVideo.src = projects[0].video;
 
 playPauseBtn.addEventListener('click', () => {
@@ -137,25 +137,6 @@ fullscreenBtn.addEventListener('click', () => {
     }
 });
 
-// ==========================================
-// Video loading: fetch as blob to bypass
-// GitHub Releases content-type issue
-// ==========================================
-const videoBlobCache = new Map();
-
-async function loadVideoAsBlob(url) {
-    // Cache: don't re-fetch if already loaded
-    if (videoBlobCache.has(url)) {
-        return videoBlobCache.get(url);
-    }
-    const response = await fetch(url);
-    const blob = await response.blob();
-    const mp4Blob = new Blob([blob], { type: 'video/mp4' });
-    const objectUrl = URL.createObjectURL(mp4Blob);
-    videoBlobCache.set(url, objectUrl);
-    return objectUrl;
-}
-
 // Load Projects
 function loadProjects() {
     const projectsGrid = document.getElementById('projectsGrid');
@@ -164,7 +145,7 @@ function loadProjects() {
         const projectCard = document.createElement('div');
         projectCard.className = 'project-card';
         projectCard.innerHTML = `
-            <video class="project-video" data-src="${project.video}" preload="none" playsinline></video>
+            <video class="project-video" src="${project.video}" preload="metadata" playsinline type="video/mp4"></video>
             <img src="${project.cover}" alt="${project.name}" class="project-cover">
             <div class="video-overlay" data-id="${project.id}">
                 <div class="play-button">
@@ -184,23 +165,19 @@ function loadProjects() {
     });
 }
 
-// Initialize on DOM ready
+// Initialize
 document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
 
-    // Click handler for video overlays
-    document.addEventListener('click', async (e) => {
+    // Click handler for playing project videos
+    document.addEventListener('click', (e) => {
         const overlay = e.target.closest('.video-overlay');
         if (!overlay) return;
 
-        // Find the video element correctly (fix Bug 2)
+        // FIX: Find video from the project card, not from sibling
         const card = overlay.closest('.project-card');
         const video = card ? card.querySelector('.project-video') : null;
         if (!video) return;
-
-        const projectId = parseInt(overlay.dataset.id);
-        const project = projects.find(p => p.id === projectId);
-        if (!project) return;
 
         // Pause all other videos
         document.querySelectorAll('.project-video').forEach(v => {
@@ -209,37 +186,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // If video hasn't been loaded yet, fetch it
-        if (!video.src || video.src === '') {
-            // Show loading state
-            const playBtn = overlay.querySelector('.play-button');
-            const originalContent = playBtn.innerHTML;
-            playBtn.innerHTML = `<span style="font-size:12px;color:#fff;">加载中...</span>`;
+        // Play this video
+        video.play().catch(err => {
+            console.error('Play failed:', err);
+        });
 
-            try {
-                const blobUrl = await loadVideoAsBlob(project.video);
-                video.src = blobUrl;
-                video.load();
-                await new Promise((resolve) => {
-                    video.addEventListener('canplay', resolve, { once: true });
-                });
-                playBtn.innerHTML = originalContent;
-            } catch (err) {
-                console.error('Video load failed:', err);
-                playBtn.innerHTML = originalContent;
-                return;
-            }
-        }
-
-        // Play the video
-        video.play().catch(err => console.error('Play failed:', err));
-
-        // Hide overlay when playing
-        video.addEventListener('play', function onPlay() {
+        // Hide overlay when video starts playing
+        video.addEventListener('playing', function onPlay() {
             overlay.style.opacity = '0';
         }, { once: true });
 
-        // Show overlay when ended
+        // Show overlay when video ends
         video.addEventListener('ended', function onEnd() {
             overlay.style.opacity = '1';
         }, { once: true });
