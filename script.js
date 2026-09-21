@@ -94,6 +94,9 @@ const playPauseBtn = document.getElementById('playPauseBtn');
 const soundBtn = document.getElementById('soundBtn');
 const fullscreenBtn = document.getElementById('fullscreenBtn');
 
+// Load hero video from Releases (same as project 1)
+heroVideo.src = projects[0].video;
+
 playPauseBtn.addEventListener('click', () => {
     if (heroVideo.paused) {
         heroVideo.play();
@@ -134,6 +137,25 @@ fullscreenBtn.addEventListener('click', () => {
     }
 });
 
+// ==========================================
+// Video loading: fetch as blob to bypass
+// GitHub Releases content-type issue
+// ==========================================
+const videoBlobCache = new Map();
+
+async function loadVideoAsBlob(url) {
+    // Cache: don't re-fetch if already loaded
+    if (videoBlobCache.has(url)) {
+        return videoBlobCache.get(url);
+    }
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const mp4Blob = new Blob([blob], { type: 'video/mp4' });
+    const objectUrl = URL.createObjectURL(mp4Blob);
+    videoBlobCache.set(url, objectUrl);
+    return objectUrl;
+}
+
 // Load Projects
 function loadProjects() {
     const projectsGrid = document.getElementById('projectsGrid');
@@ -142,9 +164,7 @@ function loadProjects() {
         const projectCard = document.createElement('div');
         projectCard.className = 'project-card';
         projectCard.innerHTML = `
-            <video class="project-video" data-src="${project.video}" preload="none">
-                <source src="${project.video}" type="video/mp4">
-            </video>
+            <video class="project-video" data-src="${project.video}" preload="none" playsinline></video>
             <img src="${project.cover}" alt="${project.name}" class="project-cover">
             <div class="video-overlay" data-id="${project.id}">
                 <div class="play-button">
@@ -164,76 +184,66 @@ function loadProjects() {
     });
 }
 
-// Lazy Loading for Project Videos
+// Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
 
-    // Intersection Observer for lazy loading
-    const videoObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const video = entry.target;
-                const src = video.getAttribute('data-src');
-                if (src) {
-                    video.src = src;
-                    video.removeAttribute('data-src');
-                    videoObserver.unobserve(video);
-                }
-            }
-        });
-    }, {
-        rootMargin: '100px'
-    });
-
-    document.querySelectorAll('.project-video').forEach(video => {
-        videoObserver.observe(video);
-    });
-
-    // Add click event listeners to video overlays
-    document.querySelectorAll('.video-overlay').forEach(overlay => {
-        overlay.addEventListener('click', (e) => {
-            const projectId = parseInt(e.currentTarget.dataset.id);
-            openProjectDetail(projectId);
-        });
-    });
-});
-
-
-// Video Playback Control
-let currentPlayingVideo = null;
-
-document.addEventListener('click', (e) => {
-    // Handle video overlay clicks
-    if (e.target.closest('.video-overlay')) {
+    // Click handler for video overlays
+    document.addEventListener('click', async (e) => {
         const overlay = e.target.closest('.video-overlay');
-        const video = overlay.previousElementSibling;
+        if (!overlay) return;
+
+        // Find the video element correctly (fix Bug 2)
+        const card = overlay.closest('.project-card');
+        const video = card ? card.querySelector('.project-video') : null;
+        if (!video) return;
+
         const projectId = parseInt(overlay.dataset.id);
         const project = projects.find(p => p.id === projectId);
+        if (!project) return;
 
-        if (project && video) {
-            // Pause all other videos
-            document.querySelectorAll('.project-video').forEach(v => {
-                if (v !== video && !v.paused) {
-                    v.pause();
-                }
-            });
+        // Pause all other videos
+        document.querySelectorAll('.project-video').forEach(v => {
+            if (v !== video && !v.paused) {
+                v.pause();
+            }
+        });
 
-            // Play this video
-            video.play();
+        // If video hasn't been loaded yet, fetch it
+        if (!video.src || video.src === '') {
+            // Show loading state
+            const playBtn = overlay.querySelector('.play-button');
+            const originalContent = playBtn.innerHTML;
+            playBtn.innerHTML = `<span style="font-size:12px;color:#fff;">加载中...</span>`;
 
-            // Hide overlay when video starts playing
-            video.addEventListener('play', function onPlay() {
-                overlay.style.opacity = '0';
-                video.removeEventListener('play', onPlay);
-            }, { once: true });
-
-            // Show overlay when video ends
-            video.addEventListener('ended', function onEnd() {
-                overlay.style.opacity = '1';
-                video.removeEventListener('ended', onEnd);
-            }, { once: true });
+            try {
+                const blobUrl = await loadVideoAsBlob(project.video);
+                video.src = blobUrl;
+                video.load();
+                await new Promise((resolve) => {
+                    video.addEventListener('canplay', resolve, { once: true });
+                });
+                playBtn.innerHTML = originalContent;
+            } catch (err) {
+                console.error('Video load failed:', err);
+                playBtn.innerHTML = originalContent;
+                return;
+            }
         }
-    }
+
+        // Play the video
+        video.play().catch(err => console.error('Play failed:', err));
+
+        // Hide overlay when playing
+        video.addEventListener('play', function onPlay() {
+            overlay.style.opacity = '0';
+        }, { once: true });
+
+        // Show overlay when ended
+        video.addEventListener('ended', function onEnd() {
+            overlay.style.opacity = '1';
+        }, { once: true });
+    });
 });
 
 
@@ -258,14 +268,6 @@ document.querySelectorAll('section').forEach(section => {
     section.style.transform = 'translateY(20px)';
     section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
     scrollObserver.observe(section);
-});
-
-// Keyboard shortcuts
-document.addEventListener('keydown', (e) => {
-    // ESC to close modal
-    if (e.key === 'Escape' && editModal.style.display === 'block') {
-        editModal.style.display = 'none';
-    }
 });
 
 // Mobile touch optimization
